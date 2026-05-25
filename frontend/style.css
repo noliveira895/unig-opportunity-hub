@@ -1,0 +1,71 @@
+/* ===== BASE ===== */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f3f1e7; /* palha suave */
+    color: #2f3b2f;
+}
+
+/* ===== HEADER ===== */
+header {
+    background-color: #6f8f72; /* verde suave */
+    color: white;
+    padding: 18px;
+    text-align: center;
+}
+
+/* ===== MENU ===== */
+nav {
+    margin-top: 10px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 12px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* ===== CONTEÚDO ===== */
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* ===== INPUTS ===== */
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* ===== BOTÃO ===== */
+button {
+    background-color: #6f8f72;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+button:hover {
+    background-color: #5c7a60;
+}
+
+/* ===== CARD DAS OPORTUNIDADES ===== */
+.card {
+    background-color: white;
+    border-left: 5px solid #6f8f72;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 5px;
+}

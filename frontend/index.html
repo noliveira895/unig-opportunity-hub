@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>UNIG Opportunity Hub</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #f3f1e7;
+            color: #2f3b2f;
+        }
+
+        header {
+            background: #6f8f72;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 10px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        button {
+            background: #6f8f72;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background: #5c7a60;
+        }
+
+        .card {
+            background: white;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 5px solid #6f8f72;
+        }
+
+        .btn-group button {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>UNIG Opportunity Hub</h1>
+
+    <nav>
+        <a href="index.html">Cadastro</a>
+        <a href="sobre.html">Sobre</a>
+        <a href="atividade.html">Atividade</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <h2>Cadastrar Oportunidade</h2>
+
+    <input id="titulo" placeholder="Título">
+    <textarea id="descricao" placeholder="Descrição"></textarea>
+    <input id="empresa" placeholder="Empresa">
+    <input id="categoria" placeholder="Categoria">
+
+    <button onclick="criar()">Salvar</button>
+
+    <hr>
+
+    <h2>Lista de Oportunidades</h2>
+    <div id="lista"></div>
+
+</div>
+
+<script>
+const API = "http://localhost:3000/oportunidades";
+
+let idEditando = null;
+
+/* =========================
+   LISTAR
+========================= */
+function carregar() {
+    fetch(API)
+        .then(res => res.json())
+        .then(data => {
+            const lista = document.getElementById("lista");
+            lista.innerHTML = "";
+
+            data.forEach(op => {
+                const div = document.createElement("div");
+                div.className = "card";
+
+                div.innerHTML = `
+                    <h3>${op.titulo}</h3>
+                    <p>${op.descricao}</p>
+                    <p><b>${op.empresa}</b> - ${op.categoria}</p>
+
+                    <div class="btn-group">
+                        <button onclick="editar(${op.id}, '${op.titulo}', '${op.descricao}', '${op.empresa}', '${op.categoria}')">
+                            Editar
+                        </button>
+
+                        <button onclick="deletar(${op.id})">
+                            Excluir
+                        </button>
+                    </div>
+                `;
+
+                lista.appendChild(div);
+            });
+        });
+}
+
+/* =========================
+   CRIAR / EDITAR
+========================= */
+function criar() {
+
+    const dados = {
+        titulo: document.getElementById("titulo").value,
+        descricao: document.getElementById("descricao").value,
+        empresa: document.getElementById("empresa").value,
+        categoria: document.getElementById("categoria").value
+    };
+
+    if (idEditando) {
+        fetch(`${API}/${idEditando}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dados)
+        })
+        .then(() => {
+            idEditando = null;
+            limpar();
+            carregar();
+        });
+
+    } else {
+        fetch(API, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dados)
+        })
+        .then(() => {
+            limpar();
+            carregar();
+        });
+    }
+}
+
+/* =========================
+   EDITAR
+========================= */
+function editar(id, titulo, descricao, empresa, categoria) {
+    idEditando = id;
+
+    document.getElementById("titulo").value = titulo;
+    document.getElementById("descricao").value = descricao;
+    document.getElementById("empresa").value = empresa;
+    document.getElementById("categoria").value = categoria;
+}
+
+/* =========================
+   DELETAR
+========================= */
+function deletar(id) {
+    fetch(`${API}/${id}`, {
+        method: "DELETE"
+    })
+    .then(() => carregar());
+}
+
+/* =========================
+   LIMPAR
+========================= */
+function limpar() {
+    document.getElementById("titulo").value = "";
+    document.getElementById("descricao").value = "";
+    document.getElementById("empresa").value = "";
+    document.getElementById("categoria").value = "";
+}
+
+/* =========================
+   INICIALIZAR
+========================= */
+window.onload = carregar;
+</script>
+
+</body>
+</html>
